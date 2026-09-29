@@ -26,7 +26,7 @@ make
 sudo ./aether --scan
 sudo ./aether --capture --bssid XX:XX:XX:XX:XX:XX --channel 6
 
- ## Modules
+# Modules
 
     Wi-Fi Scanner
 
@@ -38,7 +38,7 @@ sudo ./aether --capture --bssid XX:XX:XX:XX:XX:XX --channel 6
 
     Rogue AP
 
- ## Author
+# Author
 @iam-skb
 
 
