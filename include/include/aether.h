@@ -43,5 +43,6 @@ void aether_print_networks(const wifi_list_t *list);
 int  aether_capture(const char *iface, const char *bssid, int channel);
 int  aether_deauth(const char *iface, const char *bssid);
 int  aether_wps_audit(const char *iface, const char *bssid);
+int  aether_rogue_ap(const char *iface, const char *ssid, const char *channel);
 
 #endif /* AETHER_H */
