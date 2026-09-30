@@ -39,6 +39,8 @@ void usage(const char *prog) {
     printf("  -c, --capture             Capturer un handshake\n");
     printf("  -b, --bssid <bssid>       BSSID cible\n");
     printf("  -d, --deauth              Envoyer des paquets deauth\n");
+    printf("  -w, --wps                 Audit WPS (Pixie Dust)\n");
+    printf("  -r, --rogue <ssid>        Creer un Rogue AP\n");
     printf("  -h, --help                Afficher cette aide\n");
     printf("  -v, --version             Afficher la version\n");
     printf("\n");
@@ -48,8 +50,9 @@ int main(int argc, char *argv[]) {
     aether_config_t config = {0};
     wifi_list_t network_list = {0};
     int opt;
-    int do_scan = 0, do_capture = 0, do_deauth = 0;
+    int do_scan = 0, do_capture = 0, do_deauth = 0, do_wps = 0, do_rogue = 0;
     char *bssid = NULL;
+    char *rogue_ssid = NULL;
 
     static struct option long_options[] = {
         {"interface", required_argument, 0, 'i'},
@@ -57,18 +60,22 @@ int main(int argc, char *argv[]) {
         {"capture",   no_argument,       0, 'c'},
         {"bssid",     required_argument, 0, 'b'},
         {"deauth",    no_argument,       0, 'd'},
+        {"wps",       no_argument,       0, 'w'},
+        {"rogue",     required_argument, 0, 'r'},
         {"help",      no_argument,       0, 'h'},
         {"version",   no_argument,       0, 'v'},
         {0, 0, 0, 0}
     };
 
-    while ((opt = getopt_long(argc, argv, "i:scb:dhv", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "i:scb:dhwr:v", long_options, NULL)) != -1) {
         switch (opt) {
             case 'i': strncpy(config.interface, optarg, sizeof(config.interface) - 1); break;
             case 's': do_scan = 1; break;
             case 'c': do_capture = 1; break;
             case 'b': bssid = optarg; break;
             case 'd': do_deauth = 1; break;
+            case 'w': do_wps = 1; break;
+            case 'r': do_rogue = 1; rogue_ssid = optarg; break;
             case 'h': usage(argv[0]); return 0;
             case 'v': printf("Aether %s\n", AETHER_VERSION); return 0;
             default:  usage(argv[0]); return 1;
@@ -106,7 +113,23 @@ int main(int argc, char *argv[]) {
         aether_deauth(config.interface, bssid);
     }
 
-    if (!do_scan && !do_capture && !do_deauth) {
+    if (do_wps) {
+        if (bssid == NULL) {
+            fprintf(stderr, "[!] BSSID requis pour l'audit WPS (-b).\n");
+            return 1;
+        }
+        aether_wps_audit(config.interface, bssid);
+    }
+
+    if (do_rogue) {
+        if (rogue_ssid == NULL) {
+            fprintf(stderr, "[!] SSID requis pour le Rogue AP (-r).\n");
+            return 1;
+        }
+        aether_rogue_ap(config.interface, rogue_ssid, "6");
+    }
+
+    if (!do_scan && !do_capture && !do_deauth && !do_wps && !do_rogue) {
         usage(argv[0]);
     }
 
