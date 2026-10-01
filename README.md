@@ -42,11 +42,6 @@ Designed for:
 | Recon | Bluetooth classic + BLE scan | Yes |
 | Report | HTML report | Yes |
 | Report | JSON report | Yes |
-| Attack | PMKID attack | V2 |
-| Attack | WPA3 crack | V2 |
-| Attack | Evil Twin | V2 |
-| Stealth | Packet injection, anti-detection | V2 |
-| Multi | Multi-adapter support | V2 |
 
 ---
 
@@ -148,15 +143,6 @@ JSON report: structured output suitable for scripting or SIEM ingestion.
         ├── rogue_ap.c
         ├── bluetooth.c
         └── report.c
-
----
-
-## Roadmap
-
-| Version | Focus |
-|---------|-------|
-| V1 (current) | Recon, capture, deauth, WPS, rogue AP, bluetooth, reports |
-| V2 (private) | PMKID, WPA3 crack, Evil Twin, injection, multi-adapter, stealth |
 
 ---
 
