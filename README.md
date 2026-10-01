@@ -20,18 +20,19 @@ Aether is a wireless security framework written in C. It performs Wi-Fi scanning
 ## Build
 
 ```bash
-git clone https://github.com/theanonspider/Aether.git
+git clone https://github.com/iam-skb/Aether.git
 cd Aether
 make
-
-Usage
-bash
 
 # Set authorization token
 export AETHER_TOKEN="AETHER_AUTHORIZED"
 
 # Scan Wi-Fi networks
 sudo ./aether -i wlan0 --scan
+
+# Simulation mode (no Wi-Fi card required)
+./aether --simulate --scan
+./aether --simulate --scan -R rapport.html
 
 # Capture a handshake
 sudo ./aether -i wlan0 --capture --bssid XX:XX:XX:XX:XX:XX
@@ -60,6 +61,14 @@ WPS	WPS audit (Pixie Dust attack)
 Rogue AP	Fake access point creation
 Bluetooth	Classic and BLE device scanning
 Report	HTML and JSON report generation
+Simulation Mode
+
+If you don't have a compatible Wi-Fi card (monitor mode), you can still test Aether using the --simulate flag. It returns fake networks so you can try the tool, generate reports, and understand how it works.
+bash
+
+./aether --simulate --scan
+./aether --simulate --scan -R rapport.html
+
 Requirements
 
     Linux (Kali, Parrot, Ubuntu)
@@ -73,14 +82,17 @@ Requirements
 Author
 
 @iam-skb
+text
+
+
+3. **Commit** : `Update README with simulation mode`
 
 ---
 
 ## PDF : `Aether_V1.md`
 
-1. **Add file** → **Create new file**
-2. Nom : `Aether_V1.md`
-3. Colle :
+1. Ouvre `Aether_V1.md` (crayon ✏️)
+2. **Remplace tout** par :
 
 ```markdown
 # AETHER V1 — DOCUMENTATION OFFICIELLE
@@ -101,8 +113,8 @@ Author
 | **Langage** | C |
 | **Plateforme** | Linux |
 | **Interface** | CLI |
-| **Modules** | 7 |
-| **Dépôt** | github.com/theanonspider/Aether |
+| **Modules** | 7 + mode simulation |
+| **Dépôt** | github.com/iam-skb/Aether |
 
 ---
 
@@ -144,6 +156,11 @@ Author
 - Génération de rapports HTML
 - Génération de rapports JSON
 
+### Mode Simulation
+- Scan simulé sans carte Wi-Fi
+- Parfait pour tester l'outil et générer des rapports
+- Activé avec l'option `--simulate`
+
 ---
 
 ## SÉCURITÉ
@@ -158,7 +175,7 @@ Author
 ## INSTALLATION
 
 ```bash
-git clone https://github.com/theanonspider/Aether.git
+git clone https://github.com/iam-skb/Aether.git
 cd Aether
 make
 
@@ -171,13 +188,20 @@ UTILISATION
 bash
 
 export AETHER_TOKEN="AETHER_AUTHORIZED"
+
+# Vrai scan (carte Wi-Fi requise)
 sudo ./aether -i wlan0 --scan
+
+# Scan simulé (aucune carte Wi-Fi requise)
+./aether --simulate --scan
+./aether --simulate --scan -R rapport.html
+
+# Capture, deauth, WPS, rogue AP, bluetooth...
 sudo ./aether -i wlan0 --capture --bssid XX:XX:XX:XX:XX:XX
 sudo ./aether -i wlan0 --deauth --bssid XX:XX:XX:XX:XX:XX
 sudo ./aether -i wlan0 --wps --bssid XX:XX:XX:XX:XX:XX
 sudo ./aether -i wlan0 --rogue MyFakeAP
 sudo ./aether --bluetooth
-sudo ./aether -i wlan0 --scan --report report.html
 
 AVERTISSEMENT
 
@@ -185,4 +209,4 @@ Cet outil est fourni à des fins exclusivement éducatives et défensives.
 Toute utilisation sur un réseau sans autorisation écrite est ILLÉGALE.
 AUTEUR
 
-iam-skb
+@iam-skb — 
