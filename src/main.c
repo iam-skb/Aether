@@ -42,6 +42,7 @@ void usage(const char *prog) {
     printf("  -w, --wps                 Audit WPS (Pixie Dust)\n");
     printf("  -r, --rogue <ssid>        Creer un Rogue AP\n");
     printf("  -B, --bluetooth           Scanner les appareils Bluetooth\n");
+    printf("  -R, --report <file>       Generer un rapport (HTML ou JSON)\n");
     printf("  -h, --help                Afficher cette aide\n");
     printf("  -v, --version             Afficher la version\n");
     printf("\n");
@@ -51,9 +52,10 @@ int main(int argc, char *argv[]) {
     aether_config_t config = {0};
     wifi_list_t network_list = {0};
     int opt;
-    int do_scan = 0, do_capture = 0, do_deauth = 0, do_wps = 0, do_rogue = 0, do_bluetooth = 0;
+    int do_scan = 0, do_capture = 0, do_deauth = 0, do_wps = 0, do_rogue = 0, do_bluetooth = 0, do_report = 0;
     char *bssid = NULL;
     char *rogue_ssid = NULL;
+    char *report_file = NULL;
 
     static struct option long_options[] = {
         {"interface", required_argument, 0, 'i'},
@@ -64,12 +66,13 @@ int main(int argc, char *argv[]) {
         {"wps",       no_argument,       0, 'w'},
         {"rogue",     required_argument, 0, 'r'},
         {"bluetooth", no_argument,       0, 'B'},
+        {"report",    required_argument, 0, 'R'},
         {"help",      no_argument,       0, 'h'},
         {"version",   no_argument,       0, 'v'},
         {0, 0, 0, 0}
     };
 
-    while ((opt = getopt_long(argc, argv, "i:scb:dhwr:Bv", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "i:scb:dhwr:BR:v", long_options, NULL)) != -1) {
         switch (opt) {
             case 'i': strncpy(config.interface, optarg, sizeof(config.interface) - 1); break;
             case 's': do_scan = 1; break;
@@ -79,6 +82,7 @@ int main(int argc, char *argv[]) {
             case 'w': do_wps = 1; break;
             case 'r': do_rogue = 1; rogue_ssid = optarg; break;
             case 'B': do_bluetooth = 1; break;
+            case 'R': do_report = 1; report_file = optarg; break;
             case 'h': usage(argv[0]); return 0;
             case 'v': printf("Aether %s\n", AETHER_VERSION); return 0;
             default:  usage(argv[0]); return 1;
@@ -136,7 +140,19 @@ int main(int argc, char *argv[]) {
         aether_bluetooth_scan(DEFAULT_TIMEOUT);
     }
 
-    if (!do_scan && !do_capture && !do_deauth && !do_wps && !do_rogue && !do_bluetooth) {
+    if (do_report) {
+        if (report_file == NULL) {
+            fprintf(stderr, "[!] Nom de fichier requis pour le rapport (-R).\n");
+            return 1;
+        }
+        if (strstr(report_file, ".json") != NULL) {
+            aether_report_json(&network_list, report_file);
+        } else {
+            aether_report_html(&network_list, report_file);
+        }
+    }
+
+    if (!do_scan && !do_capture && !do_deauth && !do_wps && !do_rogue && !do_bluetooth && !do_report) {
         usage(argv[0]);
     }
 
