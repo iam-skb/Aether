@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 #define AETHER_VERSION "1.0.0"
-#define AETHER_AUTHOR  "theanonspider"
+#define AETHER_AUTHOR  "iam-skb"
 
 #define MAX_INTERFACES 16
 #define MAX_NETWORKS   256
@@ -12,7 +12,8 @@
 #define DEFAULT_CHANNEL 6
 #define DEFAULT_TIMEOUT 30
 
-/* Token de sécurité */
 #define AETHER_TOKEN "AETHER_AUTHORIZED"
 
-#endif /* CONFIG_H */
+#define AETHER_SIMULATE 1
+
+#endif
