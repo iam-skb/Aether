@@ -36,6 +36,7 @@ void usage(const char *prog) {
     printf("\nOptions:\n");
     printf("  -i, --interface <iface>   Interface Wi-Fi (ex: wlan0)\n");
     printf("  -s, --scan                Scanner les reseaux Wi-Fi\n");
+    printf("  -S, --simulate            Mode simulation (sans carte Wi-Fi)\n");
     printf("  -c, --capture             Capturer un handshake\n");
     printf("  -b, --bssid <bssid>       BSSID cible\n");
     printf("  -d, --deauth              Envoyer des paquets deauth\n");
@@ -52,7 +53,7 @@ int main(int argc, char *argv[]) {
     aether_config_t config = {0};
     wifi_list_t network_list = {0};
     int opt;
-    int do_scan = 0, do_capture = 0, do_deauth = 0, do_wps = 0, do_rogue = 0, do_bluetooth = 0, do_report = 0;
+    int do_scan = 0, do_capture = 0, do_deauth = 0, do_wps = 0, do_rogue = 0, do_bluetooth = 0, do_report = 0, do_simulate = 0;
     char *bssid = NULL;
     char *rogue_ssid = NULL;
     char *report_file = NULL;
@@ -60,6 +61,7 @@ int main(int argc, char *argv[]) {
     static struct option long_options[] = {
         {"interface", required_argument, 0, 'i'},
         {"scan",      no_argument,       0, 's'},
+        {"simulate",  no_argument,       0, 'S'},
         {"capture",   no_argument,       0, 'c'},
         {"bssid",     required_argument, 0, 'b'},
         {"deauth",    no_argument,       0, 'd'},
@@ -72,10 +74,11 @@ int main(int argc, char *argv[]) {
         {0, 0, 0, 0}
     };
 
-    while ((opt = getopt_long(argc, argv, "i:scb:dhwr:BR:v", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "i:sScb:dhwr:BR:v", long_options, NULL)) != -1) {
         switch (opt) {
             case 'i': strncpy(config.interface, optarg, sizeof(config.interface) - 1); break;
             case 's': do_scan = 1; break;
+            case 'S': do_simulate = 1; break;
             case 'c': do_capture = 1; break;
             case 'b': bssid = optarg; break;
             case 'd': do_deauth = 1; break;
@@ -96,11 +99,15 @@ int main(int argc, char *argv[]) {
     }
 
     if (do_scan) {
-        if (strlen(config.interface) == 0) {
+        if (strlen(config.interface) == 0 && !do_simulate) {
             fprintf(stderr, "[!] Interface requise pour le scan (-i).\n");
             return 1;
         }
-        aether_scan(&network_list, config.interface);
+        if (do_simulate) {
+            aether_scan_simulated(&network_list);
+        } else {
+            aether_scan(&network_list, config.interface);
+        }
         aether_print_networks(&network_list);
     }
 
