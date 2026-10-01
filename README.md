@@ -20,7 +20,7 @@ Aether is a wireless security framework written in C. It performs Wi-Fi scanning
 ## Build
 
 ```bash
-git clone https://github.com/theanonspider/Aether.git
+git clone https://github.com/iam-skb/Aether.git
 cd Aether
 make
 sudo ./aether --scan
