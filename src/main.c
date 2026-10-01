@@ -41,6 +41,7 @@ void usage(const char *prog) {
     printf("  -d, --deauth              Envoyer des paquets deauth\n");
     printf("  -w, --wps                 Audit WPS (Pixie Dust)\n");
     printf("  -r, --rogue <ssid>        Creer un Rogue AP\n");
+    printf("  -B, --bluetooth           Scanner les appareils Bluetooth\n");
     printf("  -h, --help                Afficher cette aide\n");
     printf("  -v, --version             Afficher la version\n");
     printf("\n");
@@ -50,7 +51,7 @@ int main(int argc, char *argv[]) {
     aether_config_t config = {0};
     wifi_list_t network_list = {0};
     int opt;
-    int do_scan = 0, do_capture = 0, do_deauth = 0, do_wps = 0, do_rogue = 0;
+    int do_scan = 0, do_capture = 0, do_deauth = 0, do_wps = 0, do_rogue = 0, do_bluetooth = 0;
     char *bssid = NULL;
     char *rogue_ssid = NULL;
 
@@ -62,12 +63,13 @@ int main(int argc, char *argv[]) {
         {"deauth",    no_argument,       0, 'd'},
         {"wps",       no_argument,       0, 'w'},
         {"rogue",     required_argument, 0, 'r'},
+        {"bluetooth", no_argument,       0, 'B'},
         {"help",      no_argument,       0, 'h'},
         {"version",   no_argument,       0, 'v'},
         {0, 0, 0, 0}
     };
 
-    while ((opt = getopt_long(argc, argv, "i:scb:dhwr:v", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "i:scb:dhwr:Bv", long_options, NULL)) != -1) {
         switch (opt) {
             case 'i': strncpy(config.interface, optarg, sizeof(config.interface) - 1); break;
             case 's': do_scan = 1; break;
@@ -76,6 +78,7 @@ int main(int argc, char *argv[]) {
             case 'd': do_deauth = 1; break;
             case 'w': do_wps = 1; break;
             case 'r': do_rogue = 1; rogue_ssid = optarg; break;
+            case 'B': do_bluetooth = 1; break;
             case 'h': usage(argv[0]); return 0;
             case 'v': printf("Aether %s\n", AETHER_VERSION); return 0;
             default:  usage(argv[0]); return 1;
@@ -129,7 +132,11 @@ int main(int argc, char *argv[]) {
         aether_rogue_ap(config.interface, rogue_ssid, "6");
     }
 
-    if (!do_scan && !do_capture && !do_deauth && !do_wps && !do_rogue) {
+    if (do_bluetooth) {
+        aether_bluetooth_scan(DEFAULT_TIMEOUT);
+    }
+
+    if (!do_scan && !do_capture && !do_deauth && !do_wps && !do_rogue && !do_bluetooth) {
         usage(argv[0]);
     }
 
