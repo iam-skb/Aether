@@ -88,6 +88,51 @@ int aether_scan(wifi_list_t *list, const char *iface) {
     return 0;
 }
 
+int aether_scan_simulated(wifi_list_t *list) {
+    printf("[*] [SIMULATION] Scanning networks...\n");
+    sleep(1);
+
+    list->count = 5;
+
+    strcpy(list->networks[0].bssid, "AA:BB:CC:DD:EE:01");
+    strcpy(list->networks[0].ssid, "HomeNetwork");
+    list->networks[0].channel = 6;
+    list->networks[0].rssi = -45;
+    list->networks[0].encryption = 3;
+    list->networks[0].wps = 1;
+
+    strcpy(list->networks[1].bssid, "AA:BB:CC:DD:EE:02");
+    strcpy(list->networks[1].ssid, "FreeWiFi");
+    list->networks[1].channel = 1;
+    list->networks[1].rssi = -60;
+    list->networks[1].encryption = 0;
+    list->networks[1].wps = 0;
+
+    strcpy(list->networks[2].bssid, "AA:BB:CC:DD:EE:03");
+    strcpy(list->networks[2].ssid, "Office_5G");
+    list->networks[2].channel = 44;
+    list->networks[2].rssi = -55;
+    list->networks[2].encryption = 4;
+    list->networks[2].wps = 0;
+
+    strcpy(list->networks[3].bssid, "AA:BB:CC:DD:EE:04");
+    strcpy(list->networks[3].ssid, "Cafe_Guest");
+    list->networks[3].channel = 11;
+    list->networks[3].rssi = -70;
+    list->networks[3].encryption = 2;
+    list->networks[3].wps = 1;
+
+    strcpy(list->networks[4].bssid, "AA:BB:CC:DD:EE:05");
+    strcpy(list->networks[4].ssid, "");
+    list->networks[4].channel = 3;
+    list->networks[4].rssi = -80;
+    list->networks[4].encryption = 3;
+    list->networks[4].wps = 0;
+
+    printf("[+] [SIMULATION] Found %d network(s).\n", list->count);
+    return 0;
+}
+
 void aether_print_networks(const wifi_list_t *list) {
     if (list->count == 0) {
         printf("[!] No networks found.\n");
