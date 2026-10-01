@@ -73,10 +73,6 @@ Requirements
 Author
 
 @iam-skb
-text
-
-
-3. **Commit** : `Update README complete`
 
 ---
 
@@ -189,4 +185,4 @@ Cet outil est fourni à des fins exclusivement éducatives et défensives.
 Toute utilisation sur un réseau sans autorisation écrite est ILLÉGALE.
 AUTEUR
 
-iam-skb — Cybersécurité éthique
+iam-skb
