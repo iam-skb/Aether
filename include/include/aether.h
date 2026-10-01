@@ -46,5 +46,7 @@ int  aether_wps_audit(const char *iface, const char *bssid);
 int  aether_rogue_ap(const char *iface, const char *ssid, const char *channel);
 int  aether_bluetooth_scan(int duration);
 int  aether_bluetooth_info(const char *mac);
+int  aether_report_html(const wifi_list_t *list, const char *filename);
+int  aether_report_json(const wifi_list_t *list, const char *filename);
 
 #endif /* AETHER_H */
